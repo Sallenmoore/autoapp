@@ -6,20 +6,18 @@ import autonomous
 
 
 def test_imports():
+    with open("/var/tmp/requirements-freeze.txt") as fptr:
+        print(fptr.read())
+
     submodules = inspect.getmembers(autonomous)
     print("\n====members====\n")
     for name, module in submodules:
         if "builtins" not in name:
             print(name, module)
-    # print("\n====sys.path====\n")
-    # for p in sys.path:
-    #     print(p)
-
-    print("\n====versions====\n")
-    print(open("/var/tmp/requirements.txt.log").read())
-
-    print("\n====init====\n")
-    print(open(autonomous.__file__).read())
+            
+    print("\n====sys.path====\n")
+    for p in sys.path:
+        print(p)
 
     print("\n====version====\n")
     version("autonomous")

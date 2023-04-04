@@ -40,9 +40,9 @@ debug: run
 
 tests: 
 	docker-compose up --build -d
-	docker exec -it $(APP_NAME) python -m pytest -v --log-level=INFO -rx -l -x 
+	docker exec -it $(APP_NAME) python -m pytest --cov=autonomous -rx -l -x --log-level=INFO --no-cov-on-fail
 
 RUNTEST?="test_"
 test:
 	docker-compose up --build -d
-	docker exec -it $(APP_NAME) python -m pytest -v --log-level=INFO -rx -l -x -k $(RUNTEST)
+	docker exec -it $(APP_NAME) python -m pytest --log-level=INFO -rx -l -x -k $(RUNTEST)

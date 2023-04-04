@@ -29,9 +29,9 @@ def create_app():
     #                             ROUTES                            #
     #################################################################
 
-    ########################################
-    ##           Blueprints               ##
-    ########################################
+    ######################################
+    #           Blueprints               #
+    ######################################
     # app.register_blueprint(index_page)
     # app.register_blueprint(admin_page, url_prefix="/admin")
     return app

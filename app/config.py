@@ -22,4 +22,4 @@ class DevelopmentConfig(Config):
     LOG_LEVEL = logging.INFO
     DEBUG = True
     TESTING = True
-    TRAP_HTTP_EXCEPTIONS = True
+    # TRAP_HTTP_EXCEPTIONS = True
