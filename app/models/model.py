@@ -1,10 +1,10 @@
-from autonomous.automodel import AutoModel
-
-# from typing import Optional
-from autonomous.logger import log
+from autonomous import log
+from autonomous.model.automodel import AutoModel
 
 
 class Model(AutoModel):
     # set model default attributes
-    name: str
-    age: int = None
+    attributes = {
+        "name": "",
+        "age": None,
+    }

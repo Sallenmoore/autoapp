@@ -2,29 +2,25 @@
 #           PRODUCTION           #
 ##################################
 
-##### Framework #####
+##### Frameworks #####
 
-Flask 
 autonomous
 
-##### Configuration #####
+##### Configuration and Documentation #####
 
-##### Documentation #####
 
 ##### System #####
 
-setuptools
 
 ##### API #####
 
+
 ##### Database #####
 
-redis-om
 
 ##### Frontend #####
 
-cssmin
-jsmin
+
 
 ##### Network #####
 
@@ -33,13 +29,12 @@ gunicorn
 
 ##### Security #####
 
+
 ##### Async ##### 
 
-# aiofiles
-# aiohttp
-# aiopath
 
 ##### AI #####
+
 
 ##### Parsing #####
 
@@ -49,16 +44,8 @@ dateparser
 #           DEVELOPMENT          #
 ##################################
 
-## Linting
+pytest
+pytest-cov
 
-# black
-# pytest-flakes
 
-## Debugging
 
-# flask_debug
-
-## Testing
-
-# pytest
-# coverage

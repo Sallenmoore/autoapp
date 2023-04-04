@@ -7,7 +7,6 @@ from autonomous import log
 
 class TestApp:
     def test_model(self):
-        for p in sys.path:
-            print(p)
-
         m = Model(name="test")
+        m.save()
+        assert m.pk

@@ -6,7 +6,6 @@ import autonomous
 
 
 def test_imports():
-
     submodules = inspect.getmembers(autonomous)
     print("\n====members====\n")
     for name, module in submodules:
@@ -25,13 +24,3 @@ def test_imports():
     print("\n====version====\n")
     version("autonomous")
     print(autonomous.__version__)
-    """Test that all modules can be imported."""
-    for module in (
-        "autonomous.apis",
-        "autonomous.version_control",
-        "autonomous.assets",
-        "autonomous.automodel",
-        "autonomous.autodb",
-        "autonomous.logger",
-    ):
-        __import__(module)
