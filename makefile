@@ -1,29 +1,32 @@
 
-.PHONY: all package startdb create-network clean deepclean tests test testauto testapp
-
-export APP_NAME := "app"
-export TESTING := "True"
-export LOG_LEVEL := "INFO"
-export REDIS_URL := redis://localhost:10002
-export OPENAI_KEY := ""
+.PHONY: all build run clean deepclean test tests debug
 
 all: test clean run start
 
+APP_NAME?=app
 CONTAINERS=$$(sudo docker ps -a -q)
 
-package:
-	rm -rf dist
-	python setup.py bdist_wheel sdist
-	twine check dist/*
-	twine upload -r testpypi dist/*
+###### Database #######
 
+create-network:
+	if [ -z $$(docker network ls --filter name=app_net | grep -w app_net) ]; then \
+		docker network create app_net; \
+	fi
+
+###### BUILD and RUN #######
+build:
+	docker-compose build --no-cache
+
+run: create-network 
+	docker-compose up --build -d
+	docker logs -f --since=5m -t $(APP_NAME)
 
 ###### CLEANING #######
 
 clean:
 	sudo docker ps -a
+	-docker-compose down --remove-orphans
 	-sudo docker kill $(CONTAINERS)
-	sudo docker ps -a
 
 deepclean: clean
 	-sudo docker container prune -f
@@ -31,17 +34,15 @@ deepclean: clean
 	-sudo docker system prune -a -f --volumes
 
 ###### TESTING #######
-	
-tests: testtox testapp
 
-# docker-compose up --build -d
-RUNTEST?='test_'
-test: clean
-	python -m pytest $(RUNTEST)
+debug: run
+	docker logs -f --since=5m -t $(APP_NAME)
 
-testauto: clean 
-	python -m pytest
+tests: 
+	docker-compose up --build -d
+	docker exec -it $(APP_NAME) python -m pytest -v --log-level=INFO -rx -l -x 
 
-# docker-compose up --build -d
-testapp: clean
-	cd src/autonomous/app_template; make tests
+RUNTEST?="test_"
+test:
+	docker-compose up --build -d
+	docker exec -it $(APP_NAME) python -m pytest -v --log-level=INFO -rx -l -x -k $(RUNTEST)
