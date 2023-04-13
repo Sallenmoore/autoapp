@@ -4,7 +4,8 @@
 all: test clean run start
 
 APP_NAME?=app
-CONTAINERS=$$(sudo docker ps -a -q)
+CONTAINERS?=$$(sudo docker ps -f "name=${APP_NAME}" -q)
+RUNTEST?="test_"
 
 ###### Database #######
 
@@ -42,7 +43,6 @@ tests:
 	docker-compose up --build -d
 	docker exec -it $(APP_NAME) python -m pytest --cov=autonomous -rx -l -x --log-level=INFO --no-cov-on-fail
 
-RUNTEST?="test_"
 test:
 	docker-compose up --build -d
 	docker exec -it $(APP_NAME) python -m pytest --log-level=INFO -rx -l -x -k $(RUNTEST)

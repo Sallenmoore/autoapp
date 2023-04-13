@@ -12,7 +12,7 @@ from autonomous.assets import build_assets
 
 
 def create_app():
-    # log(os.getcwd())
+
     app = Flask(os.getenv("APP_NAME", __name__))
     #################################################################
     #                             Filters                           #
@@ -22,11 +22,7 @@ def create_app():
     #################################################################
     #                             Extensions                        #
     #################################################################
-    # csspath_dir = "static/style/sass/main.scss"
-    # cssoutput_dir = "static/style/main.css"
-    # jspath_dir = "static/js"
-    # jsoutput_dir = "static/main.min.js"
-    # csspath_dir, cssoutput_dir, jspath_dir, jsoutput_dir
+
     app.before_first_request(lambda: build_assets())
 
     #################################################################

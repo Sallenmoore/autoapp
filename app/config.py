@@ -19,4 +19,4 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = True
-    # TRAP_HTTP_EXCEPTIONS = True
+    TRAP_HTTP_EXCEPTIONS = True
