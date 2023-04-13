@@ -4,7 +4,7 @@
 all: test clean run start
 
 APP_NAME?=app
-CONTAINERS=$$(sudo docker ps -a -q)
+CONTAINERS=$$(sudo docker ps --filter "name=${APP_NAME}" -q)
 
 ###### Database #######
 

@@ -16,7 +16,7 @@ errorlog = os.getenv("ERROR_LOG", "-")
 loglevel = "info"
 
 # DEVELOPMENT OPTIONS
-# if os.getenv("DEBUG"):
+
 timeout = 120
 workers = 2
 capture_output = True  # Whether to send output to the error log
