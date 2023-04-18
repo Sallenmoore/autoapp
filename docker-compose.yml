@@ -13,6 +13,8 @@ services:
     volumes:
       - ./app:/var/app/
       - ./tests:/var/app/tests
+      - ./vendor/autojs/src:/var/app/static/js/autojs
+      - ./vendor/autostyle:/var/app/static/style/autostyle
     command:
       [
         "gunicorn",

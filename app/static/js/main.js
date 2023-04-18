@@ -1,10 +1,12 @@
+import * as autojs from './autojs/base.js';
+import * as autowidgets from './autojs/widgets.js';
+
 //===My document.ready() handler...
 document.addEventListener("DOMContentLoaded", () => {
   //=== Initialize widgets
-  
-  var mm = new MobileMenu();
-  var ag = new AnimatedGraph(hover_msg="Getting a website doesn't have to be complicated");
-  
+  console.log(autojs);
+  var mm = new autowidgets.MobileMenu();
+
   //=== do some code stuff...
 
   //--Set up events

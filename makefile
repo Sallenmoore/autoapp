@@ -46,3 +46,4 @@ RUNTEST?="test_"
 test:
 	docker-compose up --build -d
 	docker exec -it $(APP_NAME) python -m pytest --log-level=INFO -rx -l -x -k $(RUNTEST)
+	docker logs -f --since=5m -t $(APP_NAME)
