@@ -1,7 +1,7 @@
 import logging
 import os
 
-from config import DevelopmentConfig
+from config import Config
 from flask import Flask
 
 # from views.admin import admin_page
@@ -12,9 +12,8 @@ from autonomous.assets import build_assets
 
 
 def create_app():
-
     app = Flask(os.getenv("APP_NAME", __name__))
-    app.config.from_object(DevelopmentConfig)
+    app.config.from_object(Config)
     #################################################################
     #                             Filters                           #
     #################################################################
@@ -27,7 +26,7 @@ def create_app():
     # cssoutput_dir = "static/style/main.css"
     # jspath_dir = "static/js"
     # jsoutput_dir = "static/main.min.js"
-    app.before_first_request(lambda: build_assets())
+    app.before_request(lambda: build_assets())
 
     #################################################################
     #                             ROUTES                            #
