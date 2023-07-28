@@ -9,6 +9,7 @@ from views.index import index_page
 
 from autonomous import log
 from autonomous.assets import build_assets
+from autonomous.tasks import make_taskrunner
 
 
 def create_app():
@@ -22,11 +23,17 @@ def create_app():
     #################################################################
     #                             Extensions                        #
     #################################################################
+
+    # - Assets
+
     # csspath_dir = "static/style/sass/main.scss"
     # cssoutput_dir = "static/style/main.css"
     # jspath_dir = "static/js"
     # jsoutput_dir = "static/main.min.js"
     app.before_request(lambda: build_assets())
+
+    # - Tasks
+    make_taskrunner(app)
 
     #################################################################
     #                             ROUTES                            #
@@ -37,4 +44,5 @@ def create_app():
     ######################################
     app.register_blueprint(index_page)
     # app.register_blueprint(admin_page, url_prefix="/admin")
+
     return app

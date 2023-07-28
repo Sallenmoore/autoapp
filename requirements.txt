@@ -2,8 +2,13 @@
 #           PRODUCTION           #
 ##################################
 
+##################################
+#           PRODUCTION           #
+##################################
+
 ##### Frameworks #####
-autonomous == 0.0.1
+dmtoolkit >= 0.0.12
+autonomous-app >= 0.1.6
 
 ##### Configuration and Documentation #####
 
@@ -20,7 +25,6 @@ autonomous == 0.0.1
 ##### Frontend #####
 
 
-
 ##### Network #####
 
 requests
@@ -30,7 +34,7 @@ gunicorn
 
 
 ##### Async ##### 
-
+celery
 
 ##### AI #####
 
@@ -38,6 +42,11 @@ gunicorn
 ##### Parsing #####
 
 dateparser
+markdown
+
+##### Utility #####
+
+d20
 
 ##################################
 #           DEVELOPMENT          #
@@ -45,6 +54,3 @@ dateparser
 
 pytest
 pytest-cov
-
-
-

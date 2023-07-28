@@ -4,7 +4,6 @@ import * as autowidgets from './autojs/widgets.js';
 //===My document.ready() handler...
 document.addEventListener("DOMContentLoaded", () => {
   //=== Initialize widgets
-  var mm = new autowidgets.MobileMenu();
 
   //=== do some code stuff...
 

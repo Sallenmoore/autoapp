@@ -2,27 +2,55 @@ version: "3"
 
 services:
   app:
-    image: app:latest
+    image: ${APP_NAME}:latest
     build:
       context: .
     working_dir: /var/app
     env_file: .env
-    container_name: app
+    container_name: ${APP_NAME}
     networks:
-      - app_net
+      - auto_net
     volumes:
       - ./app:/var/app/
       - ./tests:/var/app/tests
       - ./vendor/autojs/src:/var/app/static/js/autojs
       - ./vendor/autostyle:/var/app/static/style/autostyle
-    command:
-      [
-        "gunicorn",
-        "app:create_app()",
-        "-c/var/gunicorn.conf.py"
-      ]
+    command: ["gunicorn", "app:create_app()", "-c/var/gunicorn.conf.py"]
     ports:
-      - "80:5000"
+      - "${APP_PORT}:5000"
+  rabbitmq:
+    image: bitnami/rabbitmq:latest
+    container_name: ${APP_NAME}_rabbitmq
+    env_file: .env
+    networks:
+      - auto_net
+    stdin_open: true
+    tty: true
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.tasks
+    container_name: ${APP_NAME}_worker
+    env_file: .env
+    volumes:
+      - ./app:/var/app/
+    networks:
+      - auto_net
+    command: celery -A tasks worker --loglevel INFO
+    depends_on:
+      - rabbitmq
+  flower:
+    image: mher/flower:latest
+    container_name: ${APP_NAME}_flower
+    environment:
+      - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
+      - FLOWER_PORT=8888
+    ports:
+      - 8889:8888
+    networks:
+      - auto_net
+    depends_on:
+      - rabbitmq
 networks:
-  app_net:
-    name: app_net
+  auto_net:
+    name: auto_net
