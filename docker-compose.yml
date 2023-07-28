@@ -18,10 +18,18 @@ services:
     command: ["gunicorn", "app:create_app()", "-c/var/gunicorn.conf.py"]
     ports:
       - "${APP_PORT}:5000"
+    depends_on:
+      - worker
   rabbitmq:
     image: bitnami/rabbitmq:latest
     container_name: ${APP_NAME}_rabbitmq
     env_file: .env
+    healthcheck:
+      #test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      test: ["CMD", "rabbitmqctl", "await_startup"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
       - auto_net
     stdin_open: true
@@ -32,16 +40,19 @@ services:
       dockerfile: Dockerfile.tasks
     container_name: ${APP_NAME}_worker
     env_file: .env
+    working_dir: /var/app
     volumes:
       - ./app:/var/app/
     networks:
       - auto_net
-    command: celery -A tasks worker --loglevel INFO
+    command: celery -A tasks worker --loglevel DEBUG
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
   flower:
     image: mher/flower:latest
     container_name: ${APP_NAME}_flower
+    env_file: .env
     environment:
       - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
       - FLOWER_PORT=8888

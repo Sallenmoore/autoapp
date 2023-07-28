@@ -1,7 +1,7 @@
 import time
 from celery import shared_task
 from autonomous import log
-from app.app import create_app
+from app import create_app
 
 autotask = create_app().extensions["celery"]
 
@@ -9,20 +9,21 @@ autotask = create_app().extensions["celery"]
 @shared_task()
 def mocktask():
     time.sleep(1)
-    log.info("MockTask")
-    return "[success]"
+    log("MockTask")
+    return "success"
 
 
 @shared_task()
 def longmocktask():
     time.sleep(30)
-    return "[success]"
+    return "success"
 
 
 @shared_task()
 def parametermocktask(*args, **kwargs):
     log("ParameterMockTask", args, kwargs)
-    return "[success]"
+
+    return args[0] + args[1]
 
 
 @shared_task()

@@ -7,30 +7,31 @@ import pytest
 
 def test_base_task(app):
     results = mocktask.delay()
-    while results.status != "SUCCESS":
-        time.sleep(2)
-        log(results.status)
-    # assert results.get() == "success"
+    time.sleep(2)
+    log(results.status)
+    assert results.status == "SUCCESS"
+    assert results.get() == "success"
 
 
 def test_param_task(app):
-    results = parametermocktask.delay("hello", "world", key="value")
-    while results.status != "SUCCESS":
-        time.sleep(1)
-        log(results.status)
-    assert results.get() == "success"
+    results = parametermocktask.delay(1, 2, "hello", key="value")
+    time.sleep(1)
+    log(results.status)
+    assert results.status == "SUCCESS"
+    assert results.get() == 3
 
 
 def test_error_task(app):
+    results = errormocktask.delay()
+    time.sleep(2)
+    log(results.status)
+    assert results.status == "FAILURE"
     try:
-        results = errormocktask.delay()
+        response = results.get()
     except Exception as e:
         log(e)
-
-    while results.status != "SUCCESS":
-        time.sleep(1)
-        log(results.status)
-    assert results.get() == "success"
+    else:
+        pytest.fail(f"Exception not raised: {response}")
 
 
 def test_base_long_task(app):

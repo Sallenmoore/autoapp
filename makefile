@@ -15,7 +15,6 @@ build:
 
 run: 
 	docker-compose up --build -d
-	docker logs -f --since=5m -t $(APP_NAME)
 
 ###### CLEANING #######
 
@@ -34,9 +33,9 @@ deepclean: clean
 debug: run
 	docker logs -f --since=5m -t $(APP_NAME)
 
-tests:
+tests: clean
 	docker-compose up --build -d
-	docker exec -it $(APP_NAME) python -m pytest --cov=autonomous -rx -l -x --full-trace --log-level=INFO --no-cov-on-fail
+	docker exec -it $(APP_NAME) python -m pytest --cov=autonomous -rx -l -x --log-level=INFO --no-cov-on-fail
 
 RUNTEST?="test_"
 test:
