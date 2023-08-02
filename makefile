@@ -30,12 +30,15 @@ deepclean: clean
 
 ###### TESTING #######
 
-debug: run
+debug: clean run
 	docker logs -f --since=5m -t $(APP_NAME)
 
-tests: clean
+fulltests: deepclean build
+	docker exec -it $(APP_NAME) python -m pytest --cov=app -rx -l -x --log-level=DEBUG --no-cov-on-fail
+
+tests:
 	docker-compose up --build -d
-	docker exec -it $(APP_NAME) python -m pytest --cov=autonomous -rx -l -x --log-level=INFO --no-cov-on-fail
+	docker exec -it $(APP_NAME) python -m pytest --cov=app -rx -l -x --log-level=DEBUG --no-cov-on-fail
 
 RUNTEST?="test_"
 test:
