@@ -33,8 +33,7 @@ def create_app():
     app.before_request(lambda: build_assets())
 
     # - Tasks
-    make_taskrunner(app)
-
+    app.extensions["celery"] = make_taskrunner(app)
     #################################################################
     #                             ROUTES                            #
     #################################################################
