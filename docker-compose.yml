@@ -1,6 +1,42 @@
 version: "3"
 
 services:
+  redis:
+    image: redis:latest
+    container_name: ${APP_NAME}_redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - auto_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+  worker:
+    image: pythonenv:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.tasks
+    container_name: ${APP_NAME}_worker
+    env_file: .env
+    working_dir: /var/tasks
+    volumes:
+      - ./app/:/var/tasks/
+    networks:
+      - auto_net
+    command: rq worker --name worker --url ${RQ_DEFAULT_CONNECTION}
+    depends_on:
+      redis:
+        condition: service_healthy
+  monitor:
+    image: pythonenv:latest
+    container_name: ${APP_NAME}_monitor
+    env_file: .env
+    ports:
+      - 8889:${MONITOR_PORT}
+    command: rq-dashboard --port ${MONITOR_PORT} --redis-url ${RQ_DEFAULT_CONNECTION}
+    networks:
+      - auto_net
+    depends_on:
+      - worker
   app:
     image: ${APP_NAME}:latest
     build:
@@ -20,48 +56,6 @@ services:
       - "${APP_PORT}:5000"
     depends_on:
       - worker
-  rabbitmq:
-    image: bitnami/rabbitmq:latest
-    container_name: ${APP_NAME}_rabbitmq
-    env_file: .env
-    healthcheck:
-      #test: ["CMD", "curl", "-f", "http://localhost:15672"]
-      test: ["CMD", "rabbitmqctl", "await_startup"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    networks:
-      - auto_net
-    stdin_open: true
-    tty: true
-  worker:
-    build:
-      context: .
-      dockerfile: Dockerfile.tasks
-    container_name: ${APP_NAME}_worker
-    env_file: .env
-    working_dir: /var/app
-    volumes:
-      - ./app:/var/app/
-    networks:
-      - auto_net
-    command: celery -A tasks worker --loglevel DEBUG
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-  flower:
-    image: mher/flower:latest
-    container_name: ${APP_NAME}_flower
-    env_file: .env
-    environment:
-      - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
-      - FLOWER_PORT=8888
-    ports:
-      - 8889:8888
-    networks:
-      - auto_net
-    depends_on:
-      - rabbitmq
 networks:
   auto_net:
     name: auto_net

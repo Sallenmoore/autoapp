@@ -2,51 +2,35 @@
 #           PRODUCTION           #
 ##################################
 
-##################################
-#           PRODUCTION           #
-##################################
-
 ##### Frameworks #####
-dmtoolkit >= 0.0.14
-autonomous-app >= 0.1.9
+autonomous-app >= 0.1.18.1
 
 ##### Configuration and Documentation #####
 
-
 ##### System #####
 
-
-##### API #####
-
-
 ##### Database #####
-
+redis 
+rq
+rq-dashboard
 
 ##### Frontend #####
-
 
 ##### Network #####
 
 requests
 gunicorn
 
-##### Security #####
-
-
 ##### Async ##### 
-celery
+
 
 ##### AI #####
 
-
 ##### Parsing #####
 
-dateparser
-markdown
+##### Security #####
 
 ##### Utility #####
-
-d20
 
 ##################################
 #           DEVELOPMENT          #

@@ -1,33 +1,42 @@
 from autonomous import log
+from autonomous.tasks import AutoTasks
 from tasks import mocktask, longmocktask, parametermocktask, errormocktask
 import time
 from celery.result import AsyncResult
 import pytest
 
 
-def test_base_task(app):
-    results = mocktask.delay()
+def test_create_task(app):
+    at = AutoTasks()
+    assert at._connection
+    assert at.queue
+    task_id = at.task(mocktask)
     time.sleep(2)
-    log(results.status)
-    assert results.status == "SUCCESS"
-    assert results.get() == "success"
+    assert at.get_task(task_id)
+    assert at.get_status(task_id)
+    assert at.get_result(task_id)
+    assert at.get_all()
 
 
 def test_param_task(app):
-    results = parametermocktask.delay(1, 2, "hello", key="value")
-    time.sleep(1)
-    log(results.status)
-    assert results.status == "SUCCESS"
-    assert results.get() == 3
+    at = AutoTasks()
+    assert at.connection
+    assert at.queue
+    task_id = at.task(parametermocktask, 1, 2, "hello", key="value")
+    time.sleep(2)
+    assert at.get_task(task_id)
+    assert at.get_status(task_id)
+    assert at.get_result(task_id) == 3
+    assert at.get_all()
 
 
 def test_error_task(app):
-    results = errormocktask.delay()
+    at = AutoTasks()
+    task_id = at.task(errormocktask)
     time.sleep(2)
-    log(results.status)
-    assert results.status == "FAILURE"
+    assert at.get_status(task_id) == "FAILURE"
     try:
-        response = results.get()
+        response = at.get_result(task_id)
     except Exception as e:
         log(e)
     else:
@@ -35,8 +44,12 @@ def test_error_task(app):
 
 
 def test_base_long_task(app):
-    task = longmocktask.delay()
-    result = AsyncResult(task.id)
-    log(result.status)
-    result.ready()
-    assert result.get() == "success"
+    at = AutoTasks()
+    assert at.connection
+    assert at.queue
+    task_id = at.task(longmocktask)
+    time.sleep(2)
+    assert at.get_task(task_id)
+    assert at.get_status(task_id)
+    assert at.get_result(task_id) == "success"
+    assert at.get_all()
