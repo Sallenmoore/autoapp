@@ -19,5 +19,5 @@ class TestApp:
     def test_child_model(self):
         m = ChildModel(name="test")
         m.save()
-        assert m.table().name == "ChildModel"
-        assert m.table()._table.name == "ChildModel"
+        assert m.table.name == "ChildModel"
+        assert m.table.table.name == "ChildModel"

@@ -3,7 +3,7 @@
 ##################################
 
 ##### Frameworks #####
-autonomous-app >= 0.1.18.1
+autonomous-app >= 0.1.20
 
 ##### Configuration and Documentation #####
 

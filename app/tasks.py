@@ -1,29 +1,30 @@
 import time
+
 from autonomous import log
-from rq.decorators import job
 from autonomous.tasks import AutoTasks
 
 
-@job
 def mocktask():
+    log("MockTask - starting")
     time.sleep(1)
-    log("MockTask")
+    log("MockTask - complete")
     return "success"
 
 
-@job
 def longmocktask():
+    log("LongTask - Starting")
     time.sleep(30)
+    log("LongTask - Complete")
     return "success"
 
 
-@job
 def parametermocktask(*args, **kwargs):
-    log("ParameterMockTask", args, kwargs)
+    log("ParameterMockTask - Starting", args, kwargs)
+    result = args[0] + args[1]
+    log("ParameterMockTask - complete", result)
+    return result
 
-    return args[0] + args[1]
 
-
-@job
 def errormocktask():
+    log("ErrorMockTask - Starting")
     raise Exception("ErrorMockTask")
