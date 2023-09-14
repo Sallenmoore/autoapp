@@ -21,11 +21,12 @@ run:
 clean:
 	sudo docker ps -a
 	-docker-compose down --remove-orphans
-	-sudo docker kill $(CONTAINERS)
-
+	
 deepclean: clean
+	-sudo docker kill $(CONTAINERS)
 	-sudo docker container prune -f
 	-sudo docker image prune -f
+	-sudo docker network prune -f
 	-sudo docker system prune -a -f --volumes
 
 ###### TESTING #######
