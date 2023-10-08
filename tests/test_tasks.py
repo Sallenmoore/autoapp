@@ -49,8 +49,9 @@ class TestAutoTasks:
         at = AutoTasks()
         task = at.task(parametermocktask, 1, 2, "hello", key="value")
         assert at.get_task(task.id)
-        while task.status == "running":
+        while task.status in ["running", "queued"]:
             time.sleep(1)
+            log(task.status)
         log(task.status)
         log(task.result)
         log(task.return_value)
@@ -61,8 +62,9 @@ class TestAutoTasks:
         task = at.task(longmocktask)
         time.sleep(2)
         assert at.get_task(task.id)
-        while task.status == "running":
+        while task.status in ["running", "queued", "started"]:
             time.sleep(1)
+        assert task.status == "finished"
         assert task.return_value == "success"
 
     def test_autotask_all(self):

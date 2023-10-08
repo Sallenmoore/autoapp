@@ -23,11 +23,11 @@
 </div>
 {%- endmacro %}
 
-{% macro fullnav(footer_text="Contact Info") -%}
+{% macro fullnav(size="is-large", footer_text="Contact Info") -%}
 
 {{ sidenav() }}
 
-<div class="hero is-large">
+<div class="hero {{size}}">
   <div class="hero__header">
     <nav class="top is-mobile-responsive ">
       <div class="top__brand">
@@ -69,7 +69,7 @@
         </ul>
       </div>
       <div class="top__buttons">
-        <a href="#" class="button is-rounded">Button</a>
+        <a href="{{url_for('auth.login')}}" class="button is-rounded">Login</a>
       </div>
       <div class="top__burger has-animate is-end" id="burger">
         <span></span>

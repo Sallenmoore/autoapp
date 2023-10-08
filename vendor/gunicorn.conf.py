@@ -4,7 +4,7 @@ import traceback
 from glob import glob
 
 # Non logging stuff
-bind = f"{os.environ.get('HOST', '0.0.0.0')}:{os.environ.get('PORT', 80)}"
+bind = f"{os.environ.get('APP_HOST', '0.0.0.0')}:{os.environ.get('APP_PORT', 80)}"
 workers = 2 * multiprocessing.cpu_count() + 1
 
 access_log_format = "ACCESS - %(U)s-%(m)s - res time: %(M)s %(b)s \n"

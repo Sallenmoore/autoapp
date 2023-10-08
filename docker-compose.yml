@@ -13,45 +13,14 @@ services:
       - ./tests:/var/app/tests
       - ./vendor/autojs/src:/var/app/static/js/autojs
       - ./vendor/autostyle:/var/app/static/style/autostyle
+      - ..:/var/app/autonomous # for debugging purposes
     command: ["gunicorn", "app:create_app()", "-c/var/gunicorn.conf.py"]
     restart: unless-stopped
     ports:
-      - "${APP_PORT}:5000"
-  api:
-    image: ${APP_NAME}_api:latest
-    build:
-      context: .
-    working_dir: /var/app
-    env_file: .env
-    container_name: ${APP_NAME}
-    volumes:
-      - ./app:/var/app/
-      - ./tests:/var/app/tests
-    command: ["gunicorn", "app:create_app()", "-c/var/gunicorn.conf.py"]
-    restart: unless-stopped
-    ports:
-      - "${API_PORT}:5000"
-  redis:
-    image: redis/redis-stack-server:latest
-    container_name: ${APP_NAME}_redis
-    volumes:
-      - ./tables/:/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
-  wikidb:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_DB: wiki
-      POSTGRES_PASSWORD: ${APP_NAME}
-      POSTGRES_USER: ${APP_NAME}
-    logging:
-      driver: "none"
-    restart: unless-stopped
-    volumes:
-      - db-data:/var/lib/postgresql/data
+      - "${ENTRY_PORT}:${APP_PORT}"
   wiki:
     image: ghcr.io/requarks/wiki:2
+    container_name: ${APP_NAME}_wiki
     depends_on:
       - wikidb
     environment:
@@ -63,7 +32,44 @@ services:
       DB_NAME: wiki
     restart: unless-stopped
     ports:
-      - "${WIKI_PORT}:3000"
+      - "${WIKI_PORT}:3000" # FOR DEBUGGING - REMOVE IN PRODUCTION
+  api:
+    image: ${APP_NAME}_api:latest
+    build:
+      context: .
+    working_dir: /var/app
+    env_file: .env
+    container_name: ${APP_NAME}_api
+    volumes:
+      - ./app:/var/app/
+      - ./tests:/var/app/tests
+      - ..:/var/app/autonomous # FOR DEBUGGING - REMOVE IN PRODUCTION
+    command: ["gunicorn", "app:create_app()", "-c/var/gunicorn.conf.py"]
+    restart: unless-stopped
+    ports:
+      - "${API_PORT}:${APP_PORT}" # FOR DEBUGGING - REMOVE IN PRODUCTION
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: ${APP_NAME}_db
+    volumes:
+      - ./tables/:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+  wikidb:
+    image: postgres:15-alpine
+    container_name: ${APP_NAME}_wikidb
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_PASSWORD: ${APP_NAME}
+      POSTGRES_USER: ${APP_NAME}
+    logging:
+      driver: "none"
+    restart: unless-stopped
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
 networks:
   default:
     name: ${APP_NAME}_net
