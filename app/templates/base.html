@@ -32,6 +32,7 @@
         <!-- JavaScript Libs -->
         <script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
         <script type="module" src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+        {% block jsscripts %}{% endblock %}
     </body>
 
 </html>

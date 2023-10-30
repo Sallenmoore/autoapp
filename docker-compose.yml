@@ -18,21 +18,6 @@ services:
     restart: unless-stopped
     ports:
       - "${ENTRY_PORT}:${APP_PORT}"
-  api:
-    image: ${APP_NAME}_api:latest
-    build:
-      context: .
-    working_dir: /var/app
-    env_file: .env
-    container_name: ${APP_NAME}_api
-    volumes:
-      - ./app:/var/app/
-      - ./tests:/var/app/tests
-      - ..:/var/app/autonomous # FOR DEBUGGING - REMOVE IN PRODUCTION
-    command: ["gunicorn", "app:create_app()", "-c/var/gunicorn.conf.py"]
-    restart: unless-stopped
-    ports:
-      - "${API_PORT}:${APP_PORT}" # FOR DEBUGGING - REMOVE IN PRODUCTION
   redis:
     image: redis/redis-stack-server:latest
     container_name: ${APP_NAME}_db
