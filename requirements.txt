@@ -4,7 +4,7 @@
 
 ##### Frameworks #####
 
-autonomous-app >= 0.1.30
+autonomous-app >= 0.1.48
 
 ##### Configuration and Documentation #####
 

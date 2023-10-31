@@ -7,7 +7,7 @@ include .env
 export
 
 APP_NAME?=app
-CONTAINERS=$$(sudo docker ps --filter "name=${APP_NAME}" -q)
+CONTAINERS=$$(sudo docker ps -a -q)
 
 ###### BUILD and RUN #######
 build:
@@ -17,10 +17,11 @@ run:
 	docker-compose up --build -d
 
 ###### CLEANING #######
-
+APPCONTAINERS=$$(sudo docker ps --filter "name=${APP_NAME}" -q)
 clean:
 	sudo docker ps -a
 	-docker-compose down --remove-orphans
+	-sudo docker kill $(APPCONTAINERS)
 	
 deepclean: clean
 	-sudo docker kill $(CONTAINERS)

@@ -13,14 +13,15 @@ auth_page = Blueprint("auth", __name__)
 
 @auth_page.route("/login", methods=("GET", "POST"))
 def login():
-    log(session["user"])
+    # log(session["user"])
     if session.get("user"):
         if last_login := session["user"]["last_login"].get("_datetime"):
             diff = datetime.now() - datetime.fromisoformat(last_login)
-            if diff.days < 30 and session["user"]["state"] == "authenticated":
+            if diff.days <= 30 and session["user"]["state"] == "authenticated":
                 return redirect(url_for("index.index"))
-        session["user"] = None
+
     if request.method == "POST":
+        session["user"] = None
         if request.form.get("authprovider") == "google":
             authorizer = GoogleAuth()
             session["authprovider"] = "google"
@@ -31,8 +32,8 @@ def login():
         session["authprovider_state"] = state
         # log(uri, state)
         return redirect(uri)
-    else:
-        return render_template("login.html")
+
+    return render_template("login.html")
 
 
 @auth_page.route("/authorize", methods=("GET", "POST"))

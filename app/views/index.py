@@ -23,7 +23,9 @@ def index():
 )
 @auth_required
 def protected():
-    return {"result": "success"}
+    log(session["user"])
+    session["user"] = None
+    return render_template("index.html")
 
 
 @index_page.route("/add", methods=("POST",))
