@@ -1,7 +1,6 @@
 import time
 
 from autonomous import log
-from autonomous.tasks import AutoTasks
 
 
 def mocktask():

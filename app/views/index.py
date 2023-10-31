@@ -28,16 +28,3 @@ def protected():
     return render_template("index.html")
 
 
-@index_page.route("/add", methods=("POST",))
-def add():
-    return {"result": "success"}
-
-
-@index_page.route("/update", methods=("POST",))
-def updates():
-    return "updated"
-
-
-@index_page.route("/delete", methods=("POST",))
-def delete():
-    return "deleted"
