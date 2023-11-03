@@ -13,6 +13,7 @@ services:
       - ./tests:/var/app/tests
       - ./vendor/autojs/src:/var/app/static/js/autojs
       - ./vendor/autostyle:/var/app/static/style/autostyle
+      - ../../autonomous:/var/app/autonomous # DEBUGGING ONLY
     command: ["gunicorn", "app:create_app()", "-c/var/gunicorn.conf.py"]
     ports:
       - "${ENTRY_PORT}:${APP_PORT}"
@@ -27,6 +28,7 @@ services:
     volumes:
       - ./app:/var/app/
       - ./tests:/var/app/tests
+      - ../../autonomous:/var/app/autonomous # DEBUGGING ONLY
     command: ["gunicorn", "api:create_api()", "-c/var/gunicorn.conf.py"]
     ports:
       - "${API_PORT}:${APP_PORT}"

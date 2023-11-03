@@ -13,12 +13,13 @@ auth_page = Blueprint("auth", __name__)
 
 @auth_page.route("/login", methods=("GET", "POST"))
 def login():
-    # log(session["user"])
+    # session["user"] = None
+    # AutoUser.table().flush_table()
     if session.get("user"):
         if last_login := session["user"]["last_login"].get("_datetime"):
             diff = datetime.now() - datetime.fromisoformat(last_login)
             if diff.days <= 30 and session["user"]["state"] == "authenticated":
-                return redirect(url_for("index.index"))
+                return redirect(url_for("index.protected"))
 
     if request.method == "POST":
         session["user"] = None
@@ -48,16 +49,19 @@ def authorize():
     user_info, token = authorizer.handle_response(
         response, state=request.args.get("state")
     )
+    # log(user_info["email"])
+    user_info["provider"] = session["authprovider"]
     user = AutoUser.authenticate(user_info, token)
+    # log(user)
     session["user"] = user.serialize()
     return redirect(url_for("auth.login"))
 
 
-@auth_page.route("/logout", methods=("POST",))
+@auth_page.route("/logout", methods=("POST", "GET"))
 def logout():
     if session.get("user"):
         user = AutoUser(pk=session["user"]["pk"])
-        user.auth["state"] = "unauthenticated"
+        user.state = "unauthenticated"
         user.save()
         session.pop("user")
         # log(f"User {user.name} logged out")

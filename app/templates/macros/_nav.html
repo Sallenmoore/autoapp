@@ -66,10 +66,19 @@
               <iconify-icon icon="dashicons:portfolio" style="vertical-align:middle;" width="50"></iconify-icon>
             </a>
           </li>
+          {%if user %}
+          <li>
+            <a href="#portfolio">{{user.name}}</a>
+          </li>
+          {%endif%}
         </ul>
       </div>
       <div class="top__buttons">
+        {% if user %}
+        <a href="{{url_for('auth.logout')}}" class="button is-rounded">Logout</a>
+        {% else %}
         <a href="{{url_for('auth.login')}}" class="button is-rounded">Login</a>
+        {% endif %}
       </div>
       <div class="top__burger has-animate is-end" id="burger">
         <span></span>

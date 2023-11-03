@@ -23,8 +23,5 @@ def index():
 )
 @auth_required
 def protected():
-    log(session["user"])
-    session["user"] = None
-    return render_template("index.html")
-
-
+    context = {"user": session.get("user")}
+    return render_template("index.html", **context)

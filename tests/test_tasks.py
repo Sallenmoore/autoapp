@@ -74,9 +74,12 @@ class TestAutoTasks:
         for t in tasks.get_tasks():
             assert t.return_value or t.status == "running"
 
-    def test_error_task(app):
-        at = AutoTasks()
-        task = at.task(errormocktask)
-        time.sleep(2)
+    def test_autotask_fail(self):
+        tasks = AutoTasks()
+        tasks.clear()
+        task = tasks.task(errormocktask, 5, 5)
+        while task.status == "running":
+            time.sleep(1)
         assert task.status == "failed"
-        assert task.return_value == None
+        assert task.result["error"]
+        print(task.result["error"])

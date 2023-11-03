@@ -24,6 +24,6 @@ def parametermocktask(*args, **kwargs):
     return result
 
 
-def errormocktask():
-    log("ErrorMockTask - Starting")
-    raise Exception("ErrorMockTask")
+def errormocktask(a, b):
+    time.sleep(2)
+    return int(a) + str(b)
