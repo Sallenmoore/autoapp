@@ -6,13 +6,16 @@
 
 autonomous-app >= 0.1.52
 
-##### Configuration and Documentation #####
+##### Debugging, Logging, and Documentation #####
+
+icecream
 
 ##### System #####
 
 ##### Database #####
 
 redis 
+redis-om
 
 ##### Frontend #####
 

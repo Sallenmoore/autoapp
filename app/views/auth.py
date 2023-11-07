@@ -1,7 +1,7 @@
 # Built-In Modules
 
 # external Modules
-from datetime import datetime
+from datetime import datetime, timezone
 
 from flask import Blueprint, redirect, render_template, request, session, url_for
 
@@ -16,8 +16,9 @@ def login():
     # session["user"] = None
     # AutoUser.table().flush_table()
     if session.get("user"):
-        if last_login := session["user"]["last_login"].get("_datetime"):
-            diff = datetime.now() - datetime.fromisoformat(last_login)
+        if last_login := session["user"]["last_login"]:
+            log(last_login)
+            diff = datetime.now(timezone.utc) - last_login
             if diff.days <= 30 and session["user"]["state"] == "authenticated":
                 return redirect(url_for("index.protected"))
 
@@ -60,7 +61,7 @@ def authorize():
 @auth_page.route("/logout", methods=("POST", "GET"))
 def logout():
     if session.get("user"):
-        user = AutoUser(pk=session["user"]["pk"])
+        user = AutoUser.get(session["user"]["pk"])
         user.state = "unauthenticated"
         user.save()
         session.pop("user")
