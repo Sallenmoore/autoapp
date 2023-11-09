@@ -10,7 +10,7 @@ from autonomous.auth.user import AutoUser
 
 
 class TestAuth:
-    def test_google_auth(self, client):
+    def test_google_auth(self):
         auth = GoogleAuth()
         uri, status = auth.authenticate()
         log(uri, status)
