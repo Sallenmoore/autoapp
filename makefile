@@ -22,7 +22,10 @@ clean:
 	sudo docker ps -a
 	-docker compose down --remove-orphans
 	-sudo docker kill $(APPCONTAINERS)
-	
+
+cleanall: 
+	sudo docker kill $$(sudo docker ps -a -q)
+
 deepclean: clean
 	-sudo docker kill $(CONTAINERS)
 	-sudo docker container prune -f
@@ -37,7 +40,7 @@ debug: run
 
 fulltests: clean build debug tests
 
-tests:
+tests: debug
 	docker compose exec -it $(APP_NAME) python -m pytest --cov=app -rx -l -x --log-level=DEBUG --no-cov-on-fail
 
 RUNTEST?="TESTAUTH"
