@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, request, session
 
 from autonomous import log
 from autonomous.auth import auth_required
+from autonomous.auth.autoauth import AutoAuth
 
 index_page = Blueprint("index", __name__)
 
@@ -23,5 +24,7 @@ def index():
 )
 @auth_required
 def protected():
-    context = {"user": session.get("user")}
+    if request.form:
+        session.update(request.json)
+    context = {"user": AutoAuth.current_user, **request.json}
     return render_template("index.html", **context)
