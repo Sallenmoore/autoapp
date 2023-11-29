@@ -4,7 +4,7 @@
 
 ##### Frameworks #####
 
-autonomous-app >= 0.1.52
+autonomous-app >= 0.1.74
 
 ##### Debugging, Logging, and Documentation #####
 
